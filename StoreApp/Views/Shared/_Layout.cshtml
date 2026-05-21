@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] – Store Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <style>
+        body { background: #f8f9fa; }
+        .navbar-brand { font-weight: 700; letter-spacing: 1px; }
+        .sidebar { min-height: calc(100vh - 56px); background: #212529; }
+        .sidebar a { color: #adb5bd; display: block; padding: 10px 20px; text-decoration: none; }
+        .sidebar a:hover { background: #343a40; color: #fff; }
+        .stat-card { border-left: 4px solid; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark px-3">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">🏪 StoreSystem</a>
+        <div class="d-flex gap-3">
+            <a class="nav-link text-light" asp-controller="Categories"  asp-action="Index">Categories</a>
+            <a class="nav-link text-light" asp-controller="Products"    asp-action="Index">Products</a>
+            <a class="nav-link text-light" asp-controller="Customers"   asp-action="Index">Customers</a>
+            <a class="nav-link text-light" asp-controller="Orders"      asp-action="Index">Orders</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible mt-2" role="alert">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @RenderBody()
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

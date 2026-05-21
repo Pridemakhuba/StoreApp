@@ -1,0 +1,12 @@
+@* Views/Products/Delete.cshtml *@
+@model StoreApp.Models.Product
+@{ ViewData["Title"] = "Delete Product"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:480px">
+    <h2 class="text-danger">🗑️ Delete Product?</h2>
+    <p>Deactivate <strong>@Model.ProductName</strong> (R @Model.Price.ToString("N2"))? It will no longer appear in the store.</p>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ProductID" />
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

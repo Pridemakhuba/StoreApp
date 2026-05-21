@@ -1,0 +1,92 @@
+@* Views/Home/Index.cshtml – Dashboard *@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="py-4 px-3">
+    <h2 class="mb-4">📊 Store Dashboard</h2>
+
+    @* ── Summary stat cards ── *@
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card stat-card border-primary p-3">
+                <div class="text-muted small">Total Products</div>
+                <div class="fs-2 fw-bold text-primary">@ViewBag.TotalProducts</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stat-card border-success p-3">
+                <div class="text-muted small">Total Customers</div>
+                <div class="fs-2 fw-bold text-success">@ViewBag.TotalCustomers</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stat-card border-warning p-3">
+                <div class="text-muted small">Total Orders</div>
+                <div class="fs-2 fw-bold text-warning">@ViewBag.TotalOrders</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stat-card border-danger p-3">
+                <div class="text-muted small">Revenue (Completed)</div>
+                <div class="fs-2 fw-bold text-danger">R @ViewBag.TotalRevenue.ToString("N2")</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        @* ── Recent Orders ── *@
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header fw-semibold">🕐 Recent Orders</div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr><th>Order #</th><th>Customer</th><th>Date</th><th>Status</th><th>Total</th></tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var order in ViewBag.RecentOrders)
+                        {
+                            <tr>
+                                <td><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.OrderID">#@order.OrderID</a></td>
+                                <td>@order.Customer.FullName</td>
+                                <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                                <td><span class="badge @(order.Status == "Completed" ? "bg-success" : order.Status == "Shipped" ? "bg-info" : "bg-warning text-dark")">@order.Status</span></td>
+                                <td>R @order.TotalAmount.ToString("N2")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @* ── Low Stock Alert ── *@
+        <div class="col-md-5">
+            <div class="card border-danger">
+                <div class="card-header fw-semibold text-danger">⚠️ Low Stock (below 10)</div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr><th>Product</th><th>Qty Left</th></tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var p in ViewBag.LowStock)
+                        {
+                            <tr>
+                                <td>@p.ProductName</td>
+                                <td><span class="badge bg-danger">@p.StockQty</span></td>
+                            </tr>
+                        }
+                        @if (((System.Collections.IList)ViewBag.LowStock).Count == 0)
+                        {
+                            <tr><td colspan="2" class="text-muted text-center py-3">All products well stocked ✅</td></tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

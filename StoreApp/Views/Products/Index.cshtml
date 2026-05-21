@@ -1,0 +1,40 @@
+@* Views/Products/Index.cshtml *@
+@model IEnumerable<StoreApp.Models.Product>
+@{ ViewData["Title"] = "Products"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>📦 Products</h2>
+        <a class="btn btn-primary" asp-action="Create">+ New Product</a>
+    </div>
+    @* Search & filter form *@
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-md-4"><input name="searchName" value="@ViewBag.SearchName" class="form-control" placeholder="Search by name..." /></div>
+        <div class="col-md-3">@Html.DropDownList("categoryId", (SelectList)ViewBag.Categories, "All Categories", new { @class = "form-select" })</div>
+        <div class="col-auto"><button type="submit" class="btn btn-outline-primary">Filter</button></div>
+        <div class="col-auto"><a asp-action="Index" class="btn btn-outline-secondary">Clear</a></div>
+    </form>
+
+    <table class="table table-bordered table-hover bg-white">
+        <thead class="table-dark">
+            <tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Active</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var p in Model)
+        {
+            <tr class="@(p.StockQty < 5 ? "table-warning" : "")">
+                <td>@p.ProductID</td>
+                <td>@p.ProductName</td>
+                <td>@p.Category?.CategoryName</td>
+                <td>R @p.Price.ToString("N2")</td>
+                <td>@p.StockQty @(p.StockQty < 5 ? "⚠️" : "")</td>
+                <td>@(p.IsActive ? "✅" : "❌")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@p.ProductID" class="btn btn-sm btn-outline-info">View</a>
+                    <a asp-action="Edit"    asp-route-id="@p.ProductID" class="btn btn-sm btn-outline-warning">Edit</a>
+                    <a asp-action="Delete"  asp-route-id="@p.ProductID" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

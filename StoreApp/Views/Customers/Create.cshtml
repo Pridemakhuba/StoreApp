@@ -1,0 +1,18 @@
+@* Views/Customers/Create.cshtml *@
+@model StoreApp.Models.Customer
+@{ ViewData["Title"] = "New Customer"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:540px">
+    <h2>➕ New Customer</h2><hr />
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+        <div class="row g-2 mb-3">
+            <div class="col"><label asp-for="FirstName" class="form-label"></label><input asp-for="FirstName" class="form-control" /><span asp-validation-for="FirstName" class="text-danger"></span></div>
+            <div class="col"><label asp-for="LastName"  class="form-label"></label><input asp-for="LastName"  class="form-control" /><span asp-validation-for="LastName"  class="text-danger"></span></div>
+        </div>
+        <div class="mb-3"><label asp-for="Email"   class="form-label"></label><input asp-for="Email"   class="form-control" /><span asp-validation-for="Email"   class="text-danger"></span></div>
+        <div class="mb-3"><label asp-for="Phone"   class="form-label"></label><input asp-for="Phone"   class="form-control" /></div>
+        <div class="mb-3"><label asp-for="Address" class="form-label"></label><textarea asp-for="Address" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

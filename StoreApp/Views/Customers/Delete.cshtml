@@ -1,0 +1,13 @@
+@* Views/Customers/Delete.cshtml *@
+@model StoreApp.Models.Customer
+@{ ViewData["Title"] = "Delete Customer"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:480px">
+    <h2 class="text-danger">🗑️ Delete Customer?</h2>
+    <p>Permanently delete <strong>@Model.FullName</strong> (@Model.Email)?</p>
+    <p class="text-muted small">Note: Customers with existing orders cannot be deleted.</p>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CustomerID" />
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

@@ -1,0 +1,24 @@
+@* Views/Products/Edit.cshtml *@
+@model StoreApp.Models.Product
+@{ ViewData["Title"] = "Edit Product"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:540px">
+    <h2>✏️ Edit Product</h2><hr />
+    <form asp-action="Edit">
+        <input type="hidden" asp-for="ProductID" />
+        <input type="hidden" asp-for="CreatedDate" />
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+        <div class="mb-3">
+            <label asp-for="CategoryID" class="form-label">Category</label>
+            @Html.DropDownList("CategoryID", (SelectList)ViewBag.Categories, new { @class = "form-select" })
+        </div>
+        <div class="mb-3"><label asp-for="ProductName" class="form-label"></label><input asp-for="ProductName" class="form-control" /></div>
+        <div class="mb-3"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control" rows="3"></textarea></div>
+        <div class="row g-2 mb-3">
+            <div class="col"><label asp-for="Price" class="form-label"></label><input asp-for="Price" class="form-control" /></div>
+            <div class="col"><label asp-for="StockQty" class="form-label"></label><input asp-for="StockQty" class="form-control" /></div>
+        </div>
+        <div class="form-check mb-3"><input asp-for="IsActive" class="form-check-input" /><label asp-for="IsActive" class="form-check-label">Active</label></div>
+        <button type="submit" class="btn btn-warning">Update</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

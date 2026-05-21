@@ -1,0 +1,12 @@
+@* Views/Categories/Delete.cshtml *@
+@model StoreApp.Models.Category
+@{ ViewData["Title"] = "Delete Category"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:480px">
+    <h2 class="text-danger">🗑️ Delete Category?</h2>
+    <p>Are you sure you want to deactivate <strong>@Model.CategoryName</strong>? This will hide it from the store.</p>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CategoryID" />
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

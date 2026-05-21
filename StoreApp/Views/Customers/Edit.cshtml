@@ -1,0 +1,19 @@
+@* Views/Customers/Edit.cshtml *@
+@model StoreApp.Models.Customer
+@{ ViewData["Title"] = "Edit Customer"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:540px">
+    <h2>✏️ Edit Customer</h2><hr />
+    <form asp-action="Edit">
+        <input type="hidden" asp-for="CustomerID" />
+        <input type="hidden" asp-for="CreatedDate" />
+        <div class="row g-2 mb-3">
+            <div class="col"><label asp-for="FirstName" class="form-label"></label><input asp-for="FirstName" class="form-control" /></div>
+            <div class="col"><label asp-for="LastName"  class="form-label"></label><input asp-for="LastName"  class="form-control" /></div>
+        </div>
+        <div class="mb-3"><label asp-for="Email"   class="form-label"></label><input asp-for="Email"   class="form-control" /></div>
+        <div class="mb-3"><label asp-for="Phone"   class="form-label"></label><input asp-for="Phone"   class="form-control" /></div>
+        <div class="mb-3"><label asp-for="Address" class="form-label"></label><textarea asp-for="Address" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-warning">Update</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

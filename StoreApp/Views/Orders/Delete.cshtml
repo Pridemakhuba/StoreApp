@@ -1,0 +1,14 @@
+@* Views/Orders/Delete.cshtml *@
+@model StoreApp.Models.Order
+@{ ViewData["Title"] = "Delete Order"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:480px">
+    <h2 class="text-danger">🗑️ Delete Order #@Model.OrderID?</h2>
+    <p>Customer: <strong>@Model.Customer?.FullName</strong></p>
+    <p>Total: <strong>R @Model.TotalAmount.ToString("N2")</strong> | Status: <strong>@Model.Status</strong></p>
+    <p class="text-muted small">Only <em>Pending</em> orders can be deleted. All items will also be removed.</p>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="OrderID" />
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

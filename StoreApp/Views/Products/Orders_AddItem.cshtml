@@ -1,0 +1,50 @@
+@* Views/Orders/AddItem.cshtml *@
+@model StoreApp.Models.OrderItem
+@{ ViewData["Title"] = "Add Item"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:520px">
+    <h2>➕ Add Item to Order #@Model.OrderID</h2>
+    <p class="text-muted">Customer: <strong>@ViewBag.Order?.Customer?.FullName</strong></p>
+    <hr />
+
+    <form asp-action="AddItem" asp-controller="Orders" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="OrderID" />
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Product</label>
+            <select name="ProductID" id="ProductID" class="form-select" onchange="fillPrice(this)">
+                <option value="">-- Select Product --</option>
+                @foreach (var p in (IEnumerable<StoreApp.Models.Product>)ViewBag.ProductList)
+                {
+                    <option value="@p.ProductID" data-price="@p.Price">@p.ProductName — R @p.Price.ToString("N2") (@p.StockQty in stock)</option>
+                }
+            </select>
+            <span asp-validation-for="ProductID" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Quantity" class="form-label fw-semibold">Quantity</label>
+            <input asp-for="Quantity" name="Quantity" class="form-control" type="number" min="1" value="1" />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="UnitPrice" class="form-label fw-semibold">Unit Price (R)</label>
+            <input asp-for="UnitPrice" name="UnitPrice" id="UnitPrice" class="form-control" placeholder="Auto-filled on product select" />
+            <span asp-validation-for="UnitPrice" class="text-danger"></span>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+        <button type="submit" class="btn btn-success px-4">Add Item</button>
+        <a asp-action="Details" asp-route-id="@Model.OrderID" class="btn btn-secondary ms-2">Done</a>
+    </form>
+</div>
+
+<script>
+    // Auto-fills the unit price when a product is selected
+    function fillPrice(select) {
+        var price = select.options[select.selectedIndex].getAttribute('data-price');
+        document.getElementById('UnitPrice').value = price || '';
+    }
+</script>

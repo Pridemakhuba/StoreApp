@@ -1,0 +1,56 @@
+@* Views/Products/Edit.cshtml *@
+@model StoreApp.Models.Product
+@{ ViewData["Title"] = "Edit Product"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:540px">
+    <h2>✏️ Edit Product</h2><hr />
+
+    <form asp-action="Edit" asp-controller="Products" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="ProductID" name="ProductID" />
+        <input type="hidden" asp-for="CreatedDate" name="CreatedDate" />
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="CategoryID" class="form-label fw-semibold">Category</label>
+            <select asp-for="CategoryID" name="CategoryID" class="form-select">
+                @foreach (SelectListItem item in (SelectList)ViewBag.Categories)
+                {
+                    <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                }
+            </select>
+            <span asp-validation-for="CategoryID" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ProductName" class="form-label fw-semibold">Product Name</label>
+            <input asp-for="ProductName" name="ProductName" class="form-control" />
+            <span asp-validation-for="ProductName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label fw-semibold">Description</label>
+            <textarea asp-for="Description" name="Description" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col">
+                <label asp-for="Price" class="form-label fw-semibold">Price (R)</label>
+                <input asp-for="Price" name="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="StockQty" class="form-label fw-semibold">Stock Qty</label>
+                <input asp-for="StockQty" name="StockQty" class="form-control" />
+                <span asp-validation-for="StockQty" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-check mb-4">
+            <input asp-for="IsActive" name="IsActive" class="form-check-input" type="checkbox" />
+            <label asp-for="IsActive" class="form-check-label">Active (visible in store)</label>
+        </div>
+
+        <button type="submit" class="btn btn-warning px-4">Update Product</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

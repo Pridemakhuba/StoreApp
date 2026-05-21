@@ -1,0 +1,24 @@
+@* Views/Orders/Edit.cshtml *@
+@model StoreApp.Models.Order
+@{ ViewData["Title"] = "Edit Order"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:520px">
+    <h2>✏️ Edit Order #@Model.OrderID</h2><hr />
+    <form asp-action="Edit">
+        <input type="hidden" asp-for="OrderID" />
+        <input type="hidden" asp-for="OrderDate" />
+        <input type="hidden" asp-for="TotalAmount" />
+        <div class="mb-3">
+            <label asp-for="CustomerID" class="form-label">Customer</label>
+            @Html.DropDownList("CustomerID", (SelectList)ViewBag.Customers, new { @class = "form-select" })
+        </div>
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label"></label>
+            <select asp-for="Status" class="form-select">
+                <option>Pending</option><option>Processing</option><option>Shipped</option><option>Completed</option><option>Cancelled</option>
+            </select>
+        </div>
+        <div class="mb-3"><label asp-for="Notes" class="form-label"></label><textarea asp-for="Notes" class="form-control" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-warning">Update</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

@@ -1,0 +1,41 @@
+@* ── Views/Products/Create.cshtml ── *@
+@model StoreApp.Models.Product
+@{ ViewData["Title"] = "New Product"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3" style="max-width:540px">
+    <h2>➕ New Product</h2><hr />
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+        <div class="mb-3">
+            <label asp-for="CategoryID" class="form-label">Category</label>
+            @Html.DropDownList("CategoryID", (SelectList)ViewBag.Categories, "-- Select Category --", new { @class = "form-select" })
+            <span asp-validation-for="CategoryID" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ProductName" class="form-label"></label>
+            <input asp-for="ProductName" class="form-control" />
+            <span asp-validation-for="ProductName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="row g-2 mb-3">
+            <div class="col">
+                <label asp-for="Price" class="form-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="StockQty" class="form-label"></label>
+                <input asp-for="StockQty" class="form-control" />
+                <span asp-validation-for="StockQty" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-check mb-3">
+            <input asp-for="IsActive" class="form-check-input" />
+            <label asp-for="IsActive" class="form-check-label">Active</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>

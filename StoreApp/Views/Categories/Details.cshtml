@@ -1,0 +1,17 @@
+@* Views/Categories/Details.cshtml *@
+@model StoreApp.Models.Category
+@{ ViewData["Title"] = "Category Details"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3">
+    <h2>📂 @Model.CategoryName</h2>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Category ID</dt><dd class="col-sm-9">@Model.CategoryID</dd>
+        <dt class="col-sm-3">Description</dt><dd class="col-sm-9">@Model.Description</dd>
+        <dt class="col-sm-3">Active</dt>     <dd class="col-sm-9">@(Model.IsActive ? "Yes" : "No")</dd>
+        <dt class="col-sm-3">Created</dt>    <dd class="col-sm-9">@Model.CreatedDate.ToString("dd MMM yyyy")</dd>
+    </dl>
+    <h5 class="mt-4">Products in this category (@Model.Products.Count)</h5>
+    <ul>@foreach (var p in Model.Products) { <li>@p.ProductName – R@p.Price.ToString("N2")</li> }</ul>
+    <a asp-action="Edit" asp-route-id="@Model.CategoryID" class="btn btn-warning mt-3">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary mt-3 ms-2">Back</a>
+</div>

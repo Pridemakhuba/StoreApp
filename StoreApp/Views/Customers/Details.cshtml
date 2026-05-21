@@ -1,0 +1,30 @@
+@* Views/Customers/Details.cshtml *@
+@model StoreApp.Models.Customer
+@{ ViewData["Title"] = "Customer Details"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="py-4 px-3">
+    <h2>👤 @Model.FullName</h2><hr />
+    <dl class="row">
+        <dt class="col-sm-3">Customer ID</dt><dd class="col-sm-9">@Model.CustomerID</dd>
+        <dt class="col-sm-3">Email</dt>      <dd class="col-sm-9">@Model.Email</dd>
+        <dt class="col-sm-3">Phone</dt>      <dd class="col-sm-9">@Model.Phone</dd>
+        <dt class="col-sm-3">Address</dt>    <dd class="col-sm-9">@Model.Address</dd>
+        <dt class="col-sm-3">Member Since</dt><dd class="col-sm-9">@Model.CreatedDate.ToString("dd MMM yyyy")</dd>
+    </dl>
+    <h5 class="mt-4">Orders (@Model.Orders.Count)</h5>
+    <table class="table table-sm table-bordered">
+        <thead class="table-light"><tr><th>Order #</th><th>Date</th><th>Status</th><th>Total</th></tr></thead>
+        <tbody>
+        @foreach (var o in Model.Orders)
+        {
+            <tr>
+                <td><a asp-controller="Orders" asp-action="Details" asp-route-id="@o.OrderID">#@o.OrderID</a></td>
+                <td>@o.OrderDate.ToString("dd MMM yyyy")</td>
+                <td>@o.Status</td>
+                <td>R @o.TotalAmount.ToString("N2")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <a asp-action="Edit" asp-route-id="@Model.CustomerID" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+</div>
