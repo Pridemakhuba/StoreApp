@@ -1,0 +1,154 @@
+-- ============================================================
+-- ONT3001 Assignment – Store Management System
+-- Database: StoreDB
+-- Description: Creates all tables with primary keys, foreign
+--              keys and sample seed data for the store system.
+-- ============================================================
+
+-- Create and use the database
+CREATE DATABASE StoreDB;
+GO
+USE StoreDB;
+GO
+
+-- ============================================================
+-- TABLE: Categories
+-- Stores product category information
+-- ============================================================
+CREATE TABLE Categories (
+    CategoryID   INT           IDENTITY(1,1) PRIMARY KEY,  -- Auto-increment PK
+    CategoryName NVARCHAR(100) NOT NULL,                    -- Name of category
+    Description  NVARCHAR(255) NULL,                        -- Optional description
+    IsActive     BIT           NOT NULL DEFAULT 1,          -- Soft delete flag
+    CreatedDate  DATETIME      NOT NULL DEFAULT GETDATE()   -- Record creation date
+);
+GO
+
+-- ============================================================
+-- TABLE: Products
+-- Stores product details; linked to Categories via FK
+-- ============================================================
+CREATE TABLE Products (
+    ProductID    INT            IDENTITY(1,1) PRIMARY KEY,  -- Auto-increment PK
+    CategoryID   INT            NOT NULL,                   -- FK to Categories
+    ProductName  NVARCHAR(150)  NOT NULL,                   -- Name of the product
+    Description  NVARCHAR(500)  NULL,                       -- Product description
+    Price        DECIMAL(10,2)  NOT NULL,                   -- Unit selling price
+    StockQty     INT            NOT NULL DEFAULT 0,         -- Current stock level
+    IsActive     BIT            NOT NULL DEFAULT 1,         -- Soft delete flag
+    CreatedDate  DATETIME       NOT NULL DEFAULT GETDATE(),  -- Record creation date
+
+    CONSTRAINT FK_Products_Categories
+        FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+GO
+
+-- ============================================================
+-- TABLE: Customers
+-- Stores customer account information
+-- ============================================================
+CREATE TABLE Customers (
+    CustomerID  INT           IDENTITY(1,1) PRIMARY KEY,   -- Auto-increment PK
+    FirstName   NVARCHAR(100) NOT NULL,                    -- Customer first name
+    LastName    NVARCHAR(100) NOT NULL,                    -- Customer last name
+    Email       NVARCHAR(200) NOT NULL UNIQUE,             -- Unique email address
+    Phone       NVARCHAR(20)  NULL,                        -- Contact phone number
+    Address     NVARCHAR(300) NULL,                        -- Delivery address
+    CreatedDate DATETIME      NOT NULL DEFAULT GETDATE()   -- Registration date
+);
+GO
+
+-- ============================================================
+-- TABLE: Orders
+-- Stores order headers; linked to Customers via FK
+-- ============================================================
+CREATE TABLE Orders (
+    OrderID     INT           IDENTITY(1,1) PRIMARY KEY,   -- Auto-increment PK
+    CustomerID  INT           NOT NULL,                    -- FK to Customers
+    OrderDate   DATETIME      NOT NULL DEFAULT GETDATE(),  -- Date order was placed
+    Status      NVARCHAR(50)  NOT NULL DEFAULT 'Pending',  -- Order status
+    TotalAmount DECIMAL(10,2) NOT NULL DEFAULT 0,          -- Calculated total
+    Notes       NVARCHAR(500) NULL,                        -- Optional order notes
+
+    CONSTRAINT FK_Orders_Customers
+        FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+GO
+
+-- ============================================================
+-- TABLE: OrderItems
+-- Stores individual line items for each order
+-- Linked to both Orders and Products via FK
+-- ============================================================
+CREATE TABLE OrderItems (
+    OrderItemID INT           IDENTITY(1,1) PRIMARY KEY,   -- Auto-increment PK
+    OrderID     INT           NOT NULL,                    -- FK to Orders
+    ProductID   INT           NOT NULL,                    -- FK to Products
+    Quantity    INT           NOT NULL,                    -- Qty ordered
+    UnitPrice   DECIMAL(10,2) NOT NULL,                    -- Price at time of order
+    Subtotal    AS (Quantity * UnitPrice) PERSISTED,       -- Computed column
+
+    CONSTRAINT FK_OrderItems_Orders
+        FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    CONSTRAINT FK_OrderItems_Products
+        FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+GO
+
+-- ============================================================
+-- SEED DATA – Categories
+-- ============================================================
+INSERT INTO Categories (CategoryName, Description) VALUES
+    ('Electronics',   'Electronic devices and accessories'),
+    ('Clothing',      'Men and women clothing items'),
+    ('Food & Drinks', 'Groceries and beverages'),
+    ('Stationery',    'Office and school supplies');
+GO
+
+-- ============================================================
+-- SEED DATA – Products
+-- ============================================================
+INSERT INTO Products (CategoryID, ProductName, Description, Price, StockQty) VALUES
+    (1, 'Wireless Headphones', 'Bluetooth over-ear headphones',         799.99,  40),
+    (1, 'USB-C Charger',       '65W fast-charge USB-C adapter',          249.99, 100),
+    (2, 'Plain White T-Shirt', 'Cotton unisex t-shirt',                   89.99,  75),
+    (2, 'Denim Jeans',         'Slim-fit blue denim jeans',              349.99,  50),
+    (3, 'Orange Juice 1L',     'Fresh squeezed orange juice',             29.99, 200),
+    (3, 'Whole Wheat Bread',   '700g sliced whole wheat bread',           24.99, 150),
+    (4, 'A4 Notebook',         '96-page ruled notebook',                  39.99,  80),
+    (4, 'Ballpoint Pen Pack',  'Pack of 10 blue ballpoint pens',          19.99, 120);
+GO
+
+-- ============================================================
+-- SEED DATA – Customers
+-- ============================================================
+INSERT INTO Customers (FirstName, LastName, Email, Phone, Address) VALUES
+    ('Sipho',    'Dlamini', 'sipho.dlamini@email.com',   '0731234567', '12 Main Rd, Johannesburg'),
+    ('Ayanda',   'Nkosi',   'ayanda.nkosi@email.com',    '0829876543', '5 Palm Ave, Cape Town'),
+    ('Lethabo',  'Molefe',  'lethabo.molefe@email.com',  '0611112222', '88 Oak St, Pretoria'),
+    ('Nomvula',  'Zulu',    'nomvula.zulu@email.com',    '0763334444', '3 River Rd, Durban');
+GO
+
+-- ============================================================
+-- SEED DATA – Orders & OrderItems
+-- ============================================================
+INSERT INTO Orders (CustomerID, Status, Notes) VALUES
+    (1, 'Completed', 'First order'),
+    (2, 'Pending',   'Awaiting payment'),
+    (3, 'Shipped',   'Express delivery requested');
+GO
+
+INSERT INTO OrderItems (OrderID, ProductID, Quantity, UnitPrice) VALUES
+    (1, 1, 1, 799.99),
+    (1, 7, 2,  39.99),
+    (2, 3, 3,  89.99),
+    (2, 5, 2,  29.99),
+    (3, 4, 1, 349.99),
+    (3, 8, 1,  19.99);
+GO
+
+-- Update TotalAmount on Orders from OrderItems
+UPDATE Orders SET TotalAmount = (
+    SELECT SUM(Subtotal) FROM OrderItems WHERE OrderItems.OrderID = Orders.OrderID
+);
+GO
