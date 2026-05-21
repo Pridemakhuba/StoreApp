@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace StoreApp.Models
 {
     // ==========================================================
-    // Category – maps to dbo.Categories
+    // Category – maps to dbo.Categories "Aphelele Edited=-----
     // ==========================================================
     public class Category
     {
